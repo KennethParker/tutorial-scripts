@@ -30,24 +30,28 @@ module.exports = {
     console.log(Game.spawns);
     for (var e in Game.spawns) {
         var spawn = Game.spawns[e];
-        var spawnType = 0;
+        var spawnType = Memory.created % 3;
         console.log("Spawn Found");
         if (!spawn.spawning && (spawn.energy / spawn.energyCapacity > .51)) {
             console.log("Spawning");
             var creepType = Memory.creepDesigns[spawnType];
-            spawn.spawnCreep([CARRY, WORK, MOVE], "harvester" + Memory.created, {memory :{role: "harvester"}});
+            console.log(creepType.name);
+            spawn.spawnCreep(creepType.parts, creepType.name + Memory.created, {memory :{role: creepType.name}});
+            
             Memory.created++;
 
         }
     }},
     init: function() {
 
-    if (Memory.factoryInit != undefined) {
+    if (Memory.factoryInit != true) {
         return;
     }
     Memory.factoryInit = true;
     Memory.spawnQ = [];
-    Memory.creepDesigns = [creepType.init([CARRY, WORK, MOVE]), "harvester", 1];
+    Memory.creepDesigns = [{parts: [CARRY, WORK, MOVE], name: 'harvester', level: 1},
+    {parts: [CARRY, WORK, MOVE], name: 'builder', level: 1},
+    {parts: [CARRY, WORK, MOVE], name: 'upgrader', level: 1}];
     Memory.created = 0;
 
 }
