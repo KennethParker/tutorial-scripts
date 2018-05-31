@@ -2,6 +2,8 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 
+var roleFactory = require('role.factory');
+
 module.exports.loop = function () {
 
     var tower = Game.getObjectById('TOWER_ID');
@@ -18,6 +20,9 @@ module.exports.loop = function () {
             tower.attack(closestHostile);
         }
     }
+    roleFactory.init();
+    
+    roleFactory.spawnCreep();
 
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
