@@ -21,7 +21,7 @@ var creepType = {
 
 
 module.exports = { 
-    spawnCreep : function() {
+    spawnCreep : function(level, spawnType) {
     // TODO calculate
     var countHarvester = 1;
     var countBuilder = 1;
@@ -29,14 +29,20 @@ module.exports = {
 
     for (var e in Game.spawns) {
         var spawn = Game.spawns[e];
-        var spawnType = parseInt(Memory.created) % 3;
+        //var spawnType = parseInt(Memory.created) % 3;
         if (!spawn.spawning && (spawn.energy / spawn.energyCapacity > .51)) {
             console.log("Spawning: " + spawnType);
-            var creepType = Memory.creepDesigns[spawnType];
+            if (Memory.created > 4)
+            {
+                level = 1;
+            }
+            var creepSet = Memory.creepDesigns[level];
+            var creepType = creepSet[spawnType];
             console.log(creepType.name);
-            spawn.spawnCreep(creepType.parts, creepType.name + Memory.created, {memory :{role: creepType.name}});
-            
-            Memory.created = Memory.created + 1;
+            if (spawn.spawnCreep(creepType.parts, creepType.name + Memory.created, {memory :{role: creepType.name}})== OK)
+            {
+                Memory.created = Memory.created + 1;
+            }
 
         }
     }},
@@ -47,12 +53,16 @@ module.exports = {
     }
     Memory.factoryInit = true;
     Memory.spawnQ = [];
-    Memory.creepDesigns = [{parts: [CARRY, WORK, MOVE], name: 'upgrader', level: 1},
-    {parts: [CARRY, WORK, MOVE], name: 'harvester', level: 1},
-    {parts: [CARRY, WORK, MOVE], name: 'builder', level: 1}];
+    Memory.creepDesigns = [[{parts: [CARRY, WORK, MOVE], name: 'upgrader'},
+    {parts: [CARRY, WORK, MOVE], name: 'harvester'},
+    {parts: [CARRY, WORK, MOVE], name: 'builder'}],
+    [{parts: [CARRY,CARRY, CARRY, WORK, WORK, WORK, MOVE, MOVE, MOVE], name: 'upgrader'},
+    {parts: [CARRY,CARRY, CARRY, WORK, WORK, WORK, MOVE, MOVE, MOVE], name: 'harvester'},
+    {parts: [CARRY,CARRY, CARRY, WORK, WORK, WORK, MOVE, MOVE, MOVE], name: 'builder'}]];
     Memory.created = 0;
 
 }
 };
+
 
 
